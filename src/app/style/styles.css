@@ -1,0 +1,9 @@
+.box-container{
+    float: left;
+    background: #22ea50;
+    color: white;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    border-radius: 5px;
+}
