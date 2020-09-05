@@ -16,27 +16,30 @@ class Home extends React.Component {
     }
 
     componentDidMount() {
+        //fetching json from URL
+        //convert json into an array
         fetch('https://api.covid19india.org/state_district_wise.json')
             .then(response => {
-                response.json().then(item =>{
+                response.json().then(item => {
                     let mArray = Object.keys(item).map(function (k) {
                         return item[k]
 
                     });
                     this.setState({data: mArray});
-                    console.log("data", this.state.data);
-                    console.log(mArray);
-                } )
+                })
 
             })
     }
 
+    //handle click event
     clickHandler = (data) => {
-        this.setState({isModal: true,
-        districtList: data})
+        this.setState({
+            isModal: true,
+            districtList: data
+        })
     };
 
-    cancelModal = () =>{
+    cancelModal = () => {
         this.setState({isModal: false})
     };
 
@@ -46,10 +49,11 @@ class Home extends React.Component {
 
                 <div className="container">
                     <h3>COVID Cases</h3>
+                    {/*listing all states*/}
                     {this.state.data.length !== 0 &&
                     this.state.data.map(item => {
                         console.log(item.districtData);
-                        let districtLists =  [];
+                        let districtLists = [];
                         let active = 0;
                         let confirmed = 0;
                         let deceased = 0;
@@ -60,24 +64,25 @@ class Home extends React.Component {
                         });
                         districtLists = mArray;
 
+                        //calculating total count in state wise by adding count from district wise
                         districtLists.map(item => {
-                            console.log("hah",item)
                             confirmed = confirmed + item.confirmed;
                             active = active + item.active;
                             deceased = deceased + item.deceased;
                             recovered = recovered + item.recovered;
                         });
-                        console.log("district", districtLists);
-                        return(
-                            <div style={{float:"left"}} className="p-2 m-2 box-container"
-                                 onClick={()=>{this.clickHandler(districtLists)}}
+                        return (
+                            <div style={{float: "left"}} className="p-2 m-2 box-container"
+                                 onClick={() => {
+                                     this.clickHandler(districtLists)
+                                 }}
                             >
                                 <StatusBox
-                                    name =  {item.statecode}
+                                    name={item.statecode}
                                     activeCases={active}
                                     confirmedCases={confirmed}
                                     deceasesCases={deceased}
-                                    recoveredCases = {recovered}
+                                    recoveredCases={recovered}
 
                                 />
                             </div>
@@ -87,18 +92,17 @@ class Home extends React.Component {
 
                 </div>
 
-                {/*{this.state.isModal &&*/}
-                    <DistrictModal
-                        modal = {this.state.isModal}
-                        data = {this.state.districtList}
-                        toggle = {()=>this.cancelModal()}
-                    />
-                {/*}*/}
+                <DistrictModal
+                    modal={this.state.isModal}
+                    data={this.state.districtList}
+                    toggle={() => this.cancelModal()}
+                />
 
             </div>
         )
     }
 }
+
 export default Home;
 /**
  * Created
